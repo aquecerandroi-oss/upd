@@ -334,7 +334,7 @@
                     const email = localStorage.getItem('email') || '';
                     const telephone = localStorage.getItem('telefone') || '';
 
-                    const baseUrl = 'https://www.pay-pagamentos.link/checkout/a57285e4-1fa3-420a-8a62-c5ea84a38627';
+                    const baseUrl = 'https://pay.pagsafe.space/lDW0ZaJy554GN7E';
                     const url = new URL(baseUrl);
 
                     url.searchParams.append('name', dadosUsuario.NOME || '');
@@ -346,7 +346,7 @@
                     window.location.href = finalUrl;
                 } catch(err) {
                     console.error('Erro ao redirecionar:', err);
-                    window.location.href = buildUrlWithParams('https://www.pay-pagamentos.link/checkout/a57285e4-1fa3-420a-8a62-c5ea84a38627');
+                    window.location.href = buildUrlWithParams('https://pay.pagsafe.space/lDW0ZaJy554GN7E');
                 }
             });
         </script>
